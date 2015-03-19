@@ -5,13 +5,23 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hensonyung.phonesafe.utils.StreamTools;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 
 public class SplashActivity extends Activity{
+    private static final String TAG ="SplashActivity" ;
     private TextView tv_splash_version;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,8 +30,32 @@ public class SplashActivity extends Activity{
 
         tv_splash_version = (TextView) findViewById(R.id.tv_splash_version);
         tv_splash_version.setText("Version:" +getVersionName());
+        checkUpdate();
 
+    }
 
+    private void checkUpdate(){
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("http://192.168.99.177/updateinfo.html");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setConnectTimeout(5000);
+                    int code = conn.getResponseCode();
+                    if (code == 200){
+                        InputStream is = conn.getInputStream();
+                        String result = StreamTools.readFromStream(is);
+                        Log.i(TAG,"Secess" +result);
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
 
     private String getVersionName(){
