@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical"
+    tools:context="com.hensonyung.phonesafe.SelectContactActivity">
+   <TextView
+       android:id="@+id/textView1"
+       android:background="#8866ff00"
+       android:layout_width="fill_parent"
+       android:layout_height="55dp"
+       android:gravity="center"
+       android:textColor="#000000"
+       android:textSize="22sp"
+       android:text="选择联系人"
+       />
+   <ListView
+       android:id="@+id/list_select_contact"
+       android:layout_marginTop="10dp"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"/>
+
+</LinearLayout>

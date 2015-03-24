@@ -1,0 +1,70 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hensonyung="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"  android:orientation="vertical"
+    tools:context="com.hensonyung.phonesafe.Setup1Activity">
+
+    <TextView
+        android:background="#8866ff00"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:text="2.手机卡绑定"/>
+    <TextView
+
+        style="@style/text_content_style"
+        android:text="通过绑定sim卡:"
+
+        />
+    <TextView
+        style="@style/text_content_style"
+        android:text="下次重启手机如果发现sim卡变化\n就会发送报警短信"
+        />
+    <com.hensonyung.phonesafe.ui.SettingItemView
+
+        hensonyung:title="点击绑定sim卡"
+        hensonyung:desc_on="sim卡已绑定"
+        hensonyung:desc_off="sim卡没有绑定"
+        android:id="@+id/siv_setup2_sim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:src="@android:drawable/presence_offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:src="@android:drawable/presence_online"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:src="@android:drawable/presence_offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:src="@android:drawable/presence_offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <ImageView
+            android:layout_centerInParent="true"
+            android:src="@drawable/setup1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            style="@style/button_pre_style" />
+        <Button
+            style="@style/button_next_style" />
+        </RelativeLayout>
+</LinearLayout>
