@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -65,6 +66,10 @@ public class SplashActivity extends Activity{
         tv_update_info = (TextView) findViewById(R.id.tv_update_info);
 
         boolean update = sp.getBoolean("update",false);
+
+        //拷贝数据库
+        copyDB();
+
         if (update){
             checkUpdate();
         }else {
@@ -310,25 +315,29 @@ public class SplashActivity extends Activity{
         finish();
 
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_splash, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    private void copyDB(){
+        //只要拷贝一次就不用再拷贝了。
+        try {
+            File file = new File(getFilesDir(),"address.db");
+            if (file.exists()&&file.length()>0){
+                System.out.println("stand by");
+            }else {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                InputStream is = getAssets().open("address.db");
+
+                FileOutputStream fos = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int len = 0;
+                while ((len = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                }
+                is.close();
+                fos.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("can't find ");
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }

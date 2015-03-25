@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical"
+    tools:context="com.hensonyung.phonesafe.AtoolsActivity">
+
+    <TextView
+        android:background="#8866ff00"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        android:id="@+id/textView1"
+        android:layout_width="fill_parent"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:text="高级工具"/>
+    <TextView
+        android:clickable="true"
+        android:onClick="numberQuery"
+        android:gravity="center_vertical"
+        android:drawableLeft="@android:drawable/ic_menu_camera"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="22sp"
+        android:textColor="#000000"
+        android:text="号码归属地查询"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
