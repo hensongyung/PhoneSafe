@@ -46,11 +46,11 @@ public class SMSReceiver extends BroadcastReceiver {
                     abortBroadcast();
                 }else if ("#*alarm*#".equals(body)){
 
-                    MediaPlayer player = MediaPlayer.create(context, R.raw.ylzs);
+                    MediaPlayer player = MediaPlayer.create(context, R.raw.wdhbx);
                     player.setLooping(false);
                     player.setVolume(1.0f,1.0f);
                     player.start();
-                    abortBroadcast();
+//                    abortBroadcast();
                     System.out.println("alarm");
                 }else if ("#*wipedata*#".equals(body)){
                     System.out.println("wipedata");

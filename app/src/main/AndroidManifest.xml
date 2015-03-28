@@ -13,7 +13,11 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_CALL_LOG"/>
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG"/>
 
     <application
         android:allowBackup="true"
@@ -61,7 +65,7 @@
             android:name=".receiver.SMSReceiver"
             android:enabled="true"
             android:exported="true" >
-            <intent-filter android:priority="1000" >
+            <intent-filter  android:priority="999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
@@ -87,6 +91,16 @@
             android:exported="true" >
         </service>
 
+        <activity
+            android:name=".CallSafeActivity"
+            android:label="@string/title_activity_call_safe" >
+        </activity>
+
+        <service
+            android:name=".service.CallSmsSafeService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>

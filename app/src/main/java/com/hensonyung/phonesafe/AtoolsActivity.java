@@ -22,4 +22,11 @@ public class AtoolsActivity extends Activity {
         Intent intent = new Intent(this,NumberAddressQueryActivity.class);
         startActivity(intent);
     }
+
+    public void smsBackup(View view){
+
+    }
+    public void smsRestore(View view){
+
+    }
 }
