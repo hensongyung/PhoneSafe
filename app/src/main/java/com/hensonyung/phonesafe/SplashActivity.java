@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -84,7 +85,12 @@ public class SplashActivity extends Activity{
         AlphaAnimation aa = new AlphaAnimation(0.2f,1.0f);
         aa.setDuration(1000);
         findViewById(R.id.rl_root_splash).startAnimation(aa);
-
+        boolean shortcut = sp.getBoolean("shortcut",false);
+        if (!shortcut) {
+            installShortCut();
+        }else {
+            Toast.makeText(this,"已创建快捷键",Toast.LENGTH_SHORT).show();
+        }
     }
 
     private Handler handler = new Handler(){
@@ -251,7 +257,7 @@ public class SplashActivity extends Activity{
                                 public void onFailure(Throwable t, int errorNo,
                                                       String strMsg) {
                                     t.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), "下载失败", 1).show();
+                                    Toast.makeText(getApplicationContext(), "下载失败", Toast.LENGTH_SHORT).show();
                                     super.onFailure(t, errorNo, strMsg);
                                 }
 
@@ -289,7 +295,7 @@ public class SplashActivity extends Activity{
                             });
                 } else {
                     Toast.makeText(getApplicationContext(), "没有sdcard，请安装上在试",
-                            0).show();
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -339,5 +345,28 @@ public class SplashActivity extends Activity{
             e.printStackTrace();
             System.out.println("can't find ");
         }
+    }
+
+    //创建快捷图标
+    private void installShortCut(){
+        SharedPreferences.Editor editor = sp.edit();
+
+        //发送广播意图
+        Intent intent = new Intent();
+        intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        //快捷方式要包含3个重要信息，名称、图标、干什么事情
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME,"手机小卫士");
+        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher));
+        //桌面点击图标的意图
+        Intent shortCutIntent = new Intent();
+        shortCutIntent.setAction("android.intent.action.MAIN");
+        shortCutIntent.addCategory("android.intent.category.LAUNCHER");
+        shortCutIntent.setClassName(getPackageName(),"com.hensonyung.phonesafe.SplashActivity");
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,shortCutIntent);
+        sendBroadcast(intent);
+
+        editor.putBoolean("shortcut",true);
+        editor.commit();
+
     }
 }

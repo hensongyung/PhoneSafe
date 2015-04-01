@@ -91,5 +91,31 @@ public class BlackNumberDao {
         db.close();
         return result;
     }
+    //查询部分
+    public List<BlackNumberInfo> findPart(int offset,int maxnumber){
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        List<BlackNumberInfo> result = new ArrayList<>();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select number,mode from blacknumber order by _id desc limit ? offset ?",
+                new String[]{String.valueOf(maxnumber),String.valueOf(offset)});
+
+        while (cursor.moveToNext()){
+            BlackNumberInfo info = new BlackNumberInfo();
+            String number = cursor.getString(0);
+            String mode = cursor.getString(1);
+            info.setMode(mode);
+            info.setNumber(number);
+            result.add(info);
+        }
+        cursor.close();
+        db.close();
+        return result;
+    }
 
 }

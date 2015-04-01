@@ -10,11 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,15 +33,74 @@ public class CallSafeActivity extends Activity {
     private BlackNumberDao dao;
 
     private CallSmsSafeAdapter adapter;
+    private LinearLayout ll_loading;
+    private int offset = 0;
+    private int maxnumer=20;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_call_safe);
         lv_callsms_safe = (ListView) findViewById(R.id.lv_callsms_safe);
+        ll_loading = (LinearLayout) findViewById(R.id.ll_loading);
         dao = new BlackNumberDao(this);
-        infos = dao.findAll();
-        adapter = new CallSmsSafeAdapter();
-        lv_callsms_safe.setAdapter(adapter);
+//        infos = dao.findAll();
+//        adapter = new CallSmsSafeAdapter();
+//        lv_callsms_safe.setAdapter(adapter);
+
+        fillData();
+
+        lv_callsms_safe.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState){
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        //判断当前listview滚动的位置
+                        //获取最后一个可见条目在集合里面的位置
+                        int lastposition = lv_callsms_safe.getLastVisiblePosition();
+                        //集合里有20个item位置从0开始到最后一个条目的位置19
+                        if (lastposition==(infos.size()-1)){
+                            offset+=maxnumer;
+                            fillData();
+                        }
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                        break;
+                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:  // 惯性滑行状态
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+    }
+
+    private void fillData() {
+        ll_loading.setVisibility(View.VISIBLE);
+        new Thread(){
+            @Override
+            public void run() {
+                if (infos == null) {
+                    infos = dao.findPart(offset,maxnumer);
+                }else {  //已经加载过了
+                    infos.addAll(dao.findPart(offset,maxnumer));
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ll_loading.setVisibility(View.INVISIBLE);
+                        if (adapter ==null){
+                            adapter =new CallSmsSafeAdapter();
+                            lv_callsms_safe.setAdapter(adapter);
+                        }else {
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+            }
+        }.start();
     }
 
     private class CallSmsSafeAdapter extends BaseAdapter{
@@ -179,6 +240,14 @@ public class CallSafeActivity extends Activity {
                 dialog.dismiss();
             }
         });
+    }
+
+    public void add(View view){
+        int number = 1000000000;
+        for (int i =0;i<100;i++) {
+            dao.add(String.valueOf(number), "3");
+            number ++;
+        }
     }
 
 }
