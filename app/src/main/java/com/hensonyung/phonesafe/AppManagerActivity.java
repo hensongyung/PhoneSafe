@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hensonyung.phonesafe.db.dao.ApplockDao;
 import com.hensonyung.phonesafe.domain.AppInfo;
 import com.hensonyung.phonesafe.engine.AppInfoProvider;
 import com.hensonyung.phonesafe.utils.DensityUtil;
@@ -77,6 +78,8 @@ public class AppManagerActivity extends Activity implements View.OnClickListener
     //被点击的条目
     private AppInfo appInfo;
 
+
+    private ApplockDao dao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +87,9 @@ public class AppManagerActivity extends Activity implements View.OnClickListener
         tv_avail_rom = (TextView) findViewById(R.id.tv_avail_rom);
         tv_avail_sd = (TextView) findViewById(R.id.tv_avail_sd);
         tv_status= (TextView) findViewById(R.id.tv_status);
+
+        dao= new ApplockDao(this);
+
         long sdsize = getAvailSpace(Environment.getExternalStorageDirectory().getAbsolutePath());
         long romsize = getAvailSpace(Environment.getDataDirectory().getAbsolutePath());
         tv_avail_sd.setText("sd卡可用" + android.text.format.Formatter.formatFileSize(this,sdsize));
@@ -161,6 +167,34 @@ public class AppManagerActivity extends Activity implements View.OnClickListener
                 set.addAnimation(scaleAnimation);
                 set.addAnimation(alphaAnimation);
                 contentView.startAnimation(set);
+            }
+        });
+
+        lv_app_manager.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if (position==0 || position==(userAppInfos.size()+1)){
+                    return true;
+                }else if (position<=userAppInfos.size()){
+                    appInfo = userAppInfos.get(position-1);
+                }else {
+                    appInfo = systemAppInfos.get(position-1-userAppInfos.size()-1);
+                }
+
+                ViewHolder holder= (ViewHolder) view.getTag();
+                //判断是否存在
+                if (dao.find(appInfo.getPackname())){
+                    //被锁定的程序
+                    dao.delete(appInfo.getPackname());
+                    holder.iv_status.setImageResource(R.drawable.unlock);
+                }else {
+                    dao.add(appInfo.getPackname());
+//                    holder.iv_status.setImageResource(R.drawable.lock);
+                    adapter.notifyDataSetChanged();
+                }
+
+                return true;
             }
         });
 
@@ -322,6 +356,7 @@ public class AppManagerActivity extends Activity implements View.OnClickListener
                 holder.iv_icon = (ImageView) view.findViewById(R.id.iv_app_icon);
                 holder.tv_name= (TextView) view.findViewById(R.id.tv_name);
                 holder.tv_location = (TextView) view.findViewById(R.id.tv_location);
+                holder.iv_status = (ImageView) view.findViewById(R.id.iv_status);
                 view.setTag(holder);
             }
 //            appInfo = appInfos.get(position);
@@ -333,6 +368,11 @@ public class AppManagerActivity extends Activity implements View.OnClickListener
                 holder.tv_location.setText("sd卡");
             }
 
+            if (dao.find(appInfo.getPackname())){
+                holder.iv_status.setImageResource(R.drawable.lock);
+            }else {
+                holder.iv_status.setImageResource(R.drawable.unlock);
+            }
 
             return view;
         }
@@ -343,6 +383,7 @@ public class AppManagerActivity extends Activity implements View.OnClickListener
         TextView tv_name;
         TextView tv_location;
         ImageView iv_icon;
+        ImageView iv_status;
 
     }
 
