@@ -12,6 +12,15 @@ public class AppInfo {
     private boolean inRom;
     private boolean userApp;
 
+    public int getUid() {
+        return uid;
+    }
+
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
+    private int uid;
     @Override
     public String toString() {
         return "AppInfo{" +

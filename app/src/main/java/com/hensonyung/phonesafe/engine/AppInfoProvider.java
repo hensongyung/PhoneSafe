@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 
 import com.hensonyung.phonesafe.domain.AppInfo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,13 @@ public class AppInfoProvider {
             Drawable icon = packageInfo.applicationInfo.loadIcon(pm);
             String name = packageInfo.applicationInfo.loadLabel(pm).toString();
             int flags = packageInfo.applicationInfo.flags;
+            int uid = packageInfo.applicationInfo.uid;
+
+//            File rcvfile = new File("/proc/uid_stat/" +uid+"/" +"tcp_rcv");
+//            File sndfile = new File("/proc/uid_stat/"+uid + "/" +"tcp_snd");
+
+
+            appInfo.setUid(uid);
             if ((flags& ApplicationInfo.FLAG_SYSTEM) ==0){
                 //用户程序
                 appInfo.setUserApp(true);
